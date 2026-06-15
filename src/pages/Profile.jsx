@@ -59,7 +59,7 @@ const Profile = () => {
                 localStorage.getItem("userPhone");
 
             const response = await axios.put(
-                `http://localhost:5000/api/profile/${role}/${phone}`,
+                `https://worker-hubss-backend.onrender.com/api/profile/${role}/${phone}`,
                 formData
             );
 
