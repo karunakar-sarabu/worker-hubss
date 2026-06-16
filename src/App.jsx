@@ -1,12 +1,3 @@
-// import React from 'react'
-
-// const App = () => {
-//   return (
-//     <div className="bg-blue-500 text-white p-10 text-3xl">Daily Wage App</div>
-//   )
-// }
-
-// export default App
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
