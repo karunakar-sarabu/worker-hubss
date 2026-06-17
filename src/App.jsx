@@ -15,6 +15,8 @@ import MyJobs from "./pages/MyJobs";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Profile from "./pages/Profile";
 import Navbar from "./components/Navbar";
+import BrowseWorkers from "./pages/BrowseWorkers";
+import WorkerDetails from "./pages/WorkerDetails";
 
 function App() {
   return (
@@ -97,6 +99,16 @@ function App() {
               <Profile />
             </ProtectedRoute>
           }
+        />
+
+        <Route
+          path="/browse-workers"
+          element={<BrowseWorkers />}
+        />
+
+        <Route
+          path="/worker/:id"
+          element={<WorkerDetails />}
         />
       </Routes>
     </>

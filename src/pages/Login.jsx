@@ -26,19 +26,7 @@ const Login = () => {
         })
     }
 
-    // const handleSubmit = (e) => {
-    //     e.preventDefault()
-
-    //     if (
-    //         !formData.phone ||
-    //         !formData.password
-    //     ) {
-    //         alert("Please fill all fields")
-    //         return
-    //     }
-
-    //     console.log(formData)
-    // }
+    
     const handleSubmit = async (e) => {
 
         e.preventDefault()
@@ -52,13 +40,13 @@ const Login = () => {
         }
 
         try {
-
+            console.log(`${import.meta.env.VITE_API_URL}/api/login`)
             const response = await axios.post(
                 `${import.meta.env.VITE_API_URL}/api/login`,
                 formData
             );
 
-            // alert(response.data.message);
+            console.log(response.data.message);
 
             localStorage.setItem(
                 "token",
@@ -88,10 +76,7 @@ const Login = () => {
 
         } catch (error) {
 
-            // alert(
-            //     error.response?.data?.message ||
-            //     "Something went wrong"
-            // );
+           
 
         }
     }

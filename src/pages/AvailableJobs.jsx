@@ -143,6 +143,18 @@ const AvailableJobs = () => {
                             📍 {job.location}
                         </p>
 
+                        <p className="mt-2">
+                            ⭐ {job.employerRating?.toFixed(1) || 0}
+                            {" "}
+                            ({job.employerTotalRatings || 0} reviews)
+                        </p>
+
+                        {job.employerRating >= 4.5 && (
+                            <p className="text-green-600 font-semibold">
+                                ✅ Trusted Employer
+                            </p>
+                        )}
+                        
                         <p className="mt-2 font-semibold text-green-600">
                             ₹{job.wage}/day
                         </p>
