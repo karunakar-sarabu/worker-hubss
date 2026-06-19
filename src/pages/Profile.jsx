@@ -198,7 +198,7 @@ const Profile = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 p-6">
-            <div className="max-w-6xl mx-auto flex flex-col md:flex-row">
+            <div className="max-w-6xl mx-auto">
 
                 {/* Hero Section */}
 
