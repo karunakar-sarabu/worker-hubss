@@ -198,73 +198,235 @@ const Profile = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 p-6">
-            <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6">
+            <div className="max-w-6xl mx-auto flex flex-col md:flex-row">
 
-                <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-2xl font-bold">
-                        My Profile
-                    </h1>
+                {/* Hero Section */}
 
-                    <button
-                        onClick={() => setEditing(!editing)}
-                        className="bg-yellow-500 text-white px-4 py-2 rounded"
-                    >
-                        {editing ? "Cancel" : "Edit Profile"}
-                    </button>
+                <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-8 rounded-3xl shadow-xl mb-8">
+
+                    <div className="flex justify-between items-center flex-wrap gap-4">
+
+                        <div>
+                            <h1 className="text-xl md:text-5xl font-bold">
+                                {profile?.name
+                                    ? `👋 Welcome, ${profile.name}`
+                                    : `🏢 Welcome, ${profile?.companyName || "User"}`
+                                }
+                            </h1>
+
+                            <p className="mt-3 text-lg text-blue-100">
+                                Manage your professional identity and verification status.
+                            </p>
+                        </div>
+
+                        <button
+                            onClick={() => setEditing(!editing)}
+                            className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-xl font-semibold"
+                        >
+                            {editing ? "Cancel Edit" : "Edit Profile"}
+                        </button>
+
+                    </div>
+
                 </div>
 
-                {/* WORKER EDIT FORM */}
+                {/* Worker Statistics */}
 
-                {editing &&
-                    localStorage.getItem("role") === "worker" && (
-                        <>
-                            {profile.profilePhoto && (
+                {localStorage.getItem("role") === "worker" && (
 
-                                <img
-                                    src={`${import.meta.env.VITE_API_URL}/uploads/${profile.profilePhoto}`}
-                                    alt="Profile"
-                                    className="w-32 h-32 rounded-full object-cover mb-4"
-                                />
-                            )}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
 
-                            <div className="space-y-3 mb-6 border-b pb-6">
+                        <div className="bg-white p-5 rounded-2xl shadow">
+                            <p className="text-gray-500">
+                                Completion
+                            </p>
 
+                            <h2 className="text-3xl font-bold text-green-600 mt-2">
+                                {completionPercentage}%
+                            </h2>
+                        </div>
 
+                        <div className="bg-white p-5 rounded-2xl shadow">
+                            <p className="text-gray-500">
+                                Rating
+                            </p>
+
+                            <h2 className="text-3xl font-bold text-yellow-500 mt-2">
+                                ⭐ {Number(profile.rating || 0).toFixed(1)}
+                            </h2>
+
+                            <p className="text-base font-medium text-gray-500 mt-2">
+                                {profile.totalRatings || 0} Ratings
+                            </p>
+                        </div>
+
+                        <div className="bg-white p-5 rounded-2xl shadow">
+                            <p className="text-gray-500">
+                                Mobile
+                            </p>
+
+                            <h2 className="text-2xl font-bold text-green-600 mt-2">
+                                {profile.isMobileVerified
+                                    ? "✅ Verified"
+                                    : "❌ Pending"}
+                            </h2>
+                        </div>
+
+                        <div className="bg-white p-5 rounded-2xl shadow">
+                            <p className="text-gray-500">
+                                Aadhaar
+                            </p>
+
+                            <h2 className="text-2xl font-bold text-blue-600 mt-2">
+                                {profile.isAadhaarVerified
+                                    ? "✅ Verified"
+                                    : "⏳ Pending"}
+                            </h2>
+                        </div>
+
+                    </div>
+
+                )}
+
+                <div className="bg-white rounded-3xl shadow-xl p-8">
+
+                    {/* WORKER EDIT FORM */}
+
+                    {editing &&
+                        localStorage.getItem("role") === "worker" && (
+                            <>
+                                {profile.profilePhoto && (
+
+                                    <img
+                                        src={`${import.meta.env.VITE_API_URL}/uploads/${profile.profilePhoto}`}
+                                        alt="Profile"
+                                        className="w-36 h-36 rounded-full object-cover mx-auto mb-6 border-4 border-blue-100"
+                                    />
+                                )}
+
+                                <div className="bg-gray-50 rounded-2xl p-6 mb-8 border space-y-4">
+                                    <input
+                                        type="text"
+                                        placeholder="Name"
+                                        value={formData.name || ""}
+                                        onChange={(e) =>
+                                            setFormData({
+                                                ...formData,
+                                                name: e.target.value,
+                                            })
+                                        }
+                                        className="w-full border p-2 rounded"
+                                    />
+
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) =>
+                                            setSelectedFile(e.target.files[0])
+                                        }
+                                    />
+                                    <button
+                                        onClick={uploadPhoto}
+                                        className="bg-blue-600 text-white w-full py-4 text-lg font-bold rounded-xl rounded"
+                                    >
+                                        Upload Photo
+                                    </button>
+                                    <input
+                                        type="text"
+                                        placeholder="Skill"
+                                        value={formData.skill || ""}
+                                        onChange={(e) =>
+                                            setFormData({
+                                                ...formData,
+                                                skill: e.target.value,
+                                            })
+                                        }
+                                        className="w-full border p-2 rounded"
+                                    />
+
+                                    <input
+                                        type="text"
+                                        placeholder="Location"
+                                        value={formData.location || ""}
+                                        onChange={(e) =>
+                                            setFormData({
+                                                ...formData,
+                                                location: e.target.value,
+                                            })
+                                        }
+                                        className="w-full border p-2 rounded"
+                                    />
+
+                                    <input
+                                        type="number"
+                                        placeholder="Daily Wage"
+                                        value={formData.wage || ""}
+                                        onChange={(e) =>
+                                            setFormData({
+                                                ...formData,
+                                                wage: e.target.value,
+                                            })
+                                        }
+                                        className="w-full border p-2 rounded"
+                                    />
+
+                                    <input
+                                        type="number"
+                                        placeholder="Experience (Years)"
+                                        value={formData.experience || ""}
+                                        onChange={(e) =>
+                                            setFormData({
+                                                ...formData,
+                                                experience: e.target.value,
+                                            })
+                                        }
+                                        className="w-full border p-2 rounded"
+                                    />
+
+                                    <p>
+                                        <strong>Rating:</strong>{" "}
+                                        ⭐ {profile.rating || 0}
+                                        {" "}
+                                        ({profile.totalRatings || 0} reviews)
+                                    </p>
+
+                                    <textarea
+                                        rows="4"
+                                        placeholder="About Me"
+                                        value={formData.about || ""}
+                                        onChange={(e) =>
+                                            setFormData({
+                                                ...formData,
+                                                about: e.target.value,
+                                            })
+                                        }
+                                        className="w-full border p-2 rounded"
+                                    />
+
+                                    <button
+                                        onClick={updateProfile}
+                                        className="bg-green-600 text-white w-full py-4 text-lg font-bold rounded-xl rounded"
+                                    >
+                                        Update Profile
+                                    </button>
+                                </div>
+                            </>
+                        )}
+
+                    {/* EMPLOYER EDIT FORM */}
+
+                    {editing &&
+                        localStorage.getItem("role") === "employer" && (
+                            <div className="bg-gray-50 rounded-2xl p-6 mb-8 border space-y-4">
 
                                 <input
                                     type="text"
-                                    placeholder="Name"
-                                    value={formData.name || ""}
+                                    placeholder="Company Name"
+                                    value={formData.companyName || ""}
                                     onChange={(e) =>
                                         setFormData({
                                             ...formData,
-                                            name: e.target.value,
-                                        })
-                                    }
-                                    className="w-full border p-2 rounded"
-                                />
-
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={(e) =>
-                                        setSelectedFile(e.target.files[0])
-                                    }
-                                />
-                                <button
-                                    onClick={uploadPhoto}
-                                    className="bg-blue-600 text-white px-4 py-2 rounded"
-                                >
-                                    Upload Photo
-                                </button>
-                                <input
-                                    type="text"
-                                    placeholder="Skill"
-                                    value={formData.skill || ""}
-                                    onChange={(e) =>
-                                        setFormData({
-                                            ...formData,
-                                            skill: e.target.value,
+                                            companyName: e.target.value,
                                         })
                                     }
                                     className="w-full border p-2 rounded"
@@ -283,279 +445,273 @@ const Profile = () => {
                                     className="w-full border p-2 rounded"
                                 />
 
-                                <input
-                                    type="number"
-                                    placeholder="Daily Wage"
-                                    value={formData.wage || ""}
-                                    onChange={(e) =>
-                                        setFormData({
-                                            ...formData,
-                                            wage: e.target.value,
-                                        })
-                                    }
-                                    className="w-full border p-2 rounded"
-                                />
-
-                                <input
-                                    type="number"
-                                    placeholder="Experience (Years)"
-                                    value={formData.experience || ""}
-                                    onChange={(e) =>
-                                        setFormData({
-                                            ...formData,
-                                            experience: e.target.value,
-                                        })
-                                    }
-                                    className="w-full border p-2 rounded"
-                                />
-
-                                <p>
-                                    <strong>Rating:</strong>{" "}
-                                    ⭐ {profile.rating || 0}
-                                    {" "}
-                                    ({profile.totalRatings || 0} reviews)
-                                </p>
-
-                                <textarea
-                                    rows="4"
-                                    placeholder="About Me"
-                                    value={formData.about || ""}
-                                    onChange={(e) =>
-                                        setFormData({
-                                            ...formData,
-                                            about: e.target.value,
-                                        })
-                                    }
-                                    className="w-full border p-2 rounded"
-                                />
-
                                 <button
                                     onClick={updateProfile}
-                                    className="bg-green-600 text-white px-4 py-2 rounded"
+                                    className="bg-green-600 text-white w-full py-4 text-lg font-bold rounded-xl rounded"
                                 >
                                     Update Profile
                                 </button>
                             </div>
-                        </>
-                    )}
-
-                {/* EMPLOYER EDIT FORM */}
-
-                {editing &&
-                    localStorage.getItem("role") === "employer" && (
-                        <div className="space-y-3 mb-6 border-b pb-6">
-
-                            <input
-                                type="text"
-                                placeholder="Company Name"
-                                value={formData.companyName || ""}
-                                onChange={(e) =>
-                                    setFormData({
-                                        ...formData,
-                                        companyName: e.target.value,
-                                    })
-                                }
-                                className="w-full border p-2 rounded"
-                            />
-
-                            <input
-                                type="text"
-                                placeholder="Location"
-                                value={formData.location || ""}
-                                onChange={(e) =>
-                                    setFormData({
-                                        ...formData,
-                                        location: e.target.value,
-                                    })
-                                }
-                                className="w-full border p-2 rounded"
-                            />
-
-                            <button
-                                onClick={updateProfile}
-                                className="bg-green-600 text-white px-4 py-2 rounded"
-                            >
-                                Update Profile
-                            </button>
-                        </div>
-                    )}
-
-                {/* WORKER PROFILE */}
-
-                {localStorage.getItem("role") === "worker" ? (
-                    <>
-
-                        {profile.profilePhoto && (
-
-                            <img
-                                src={`${import.meta.env.VITE_API_URL}/uploads/${profile.profilePhoto}`}
-                                alt="Profile"
-                                className="w-32 h-32 rounded-full object-cover mb-4"
-                            />
                         )}
 
-                        <div className="mb-6">
-                            <div className="flex justify-between mb-2">
-                                <span className="font-semibold">
-                                    Profile Completion
-                                </span>
+                    {/* WORKER PROFILE */}
 
-                                <span>
-                                    {completionPercentage}%
-                                </span>
-                            </div>
+                    {localStorage.getItem("role") === "worker" ? (
+                        <>
 
-                            <div className="w-full bg-gray-200 rounded-full h-4">
-                                <div
-                                    className="bg-green-500 h-4 rounded-full"
-                                    style={{
-                                        width: `${completionPercentage}%`,
-                                    }}
+                            {profile.profilePhoto && (
+
+                                <img
+                                    src={`${import.meta.env.VITE_API_URL}/uploads/${profile.profilePhoto}`}
+                                    alt="Profile"
+                                    className="w-36 h-36 rounded-full object-cover mx-auto mb-6 border-4 border-blue-100"
                                 />
+                            )}
+
+                            <div className="mb-6">
+                                <div className="flex justify-between mb-2">
+                                    <h3 className="text-2xl font-bold text-slate-800 mb-4">
+                                        💼 Professional Information
+                                    </h3>
+
+                                    <span>
+                                        {completionPercentage}%
+                                    </span>
+                                </div>
+
+                                <div className="w-full bg-gray-200 rounded-full h-4">
+                                    <div
+                                        className="bg-green-500 h-4 rounded-full"
+                                        style={{
+                                            width: `${completionPercentage}%`,
+                                        }}
+                                    />
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="space-y-2">
-                            <p>
-                                <strong>Name:</strong> {profile.name}
-                            </p>
+                            <div className="grid md:grid-cols-2 gap-6">
 
-                            <p>
-                                <strong>Phone:</strong> {profile.phone}
-                            </p>
+                                <div className="bg-gray-50 p-4 rounded-xl">
+                                    <p className="text-gray-500 text-base font-medium">
+                                        Full Name
+                                    </p>
 
-                            <p>
-                                <strong>Skill:</strong> {profile.skill}
-                            </p>
+                                    <h3 className="text-2xl font-bold text-slate-800">
+                                        {profile.name}
+                                    </h3>
+                                </div>
 
-                            <p>
-                                <strong>Location:</strong> {profile.location}
-                            </p>
+                                <div className="bg-gray-50 p-4 rounded-xl">
+                                    <p className="text-gray-500 text-base font-medium">
+                                        Phone Number
+                                    </p>
 
-                            <p>
-                                <strong>Wage:</strong> ₹{profile.wage}
-                            </p>
+                                    <h3 className="text-2xl font-bold text-slate-800">
+                                        {profile.phone}
+                                    </h3>
+                                </div>
 
-                            <p>
-                                <strong>Experience:</strong>{" "}
-                                {profile.experience || 0} Years
-                            </p>
+                                <div className="bg-gray-50 p-4 rounded-xl">
+                                    <p className="text-gray-500 text-base font-medium">
+                                        Skill
+                                    </p>
 
-                            <p>
-                                <strong>About:</strong>{" "}
-                                {profile.about || "Not added yet"}
-                            </p>
-                        </div>
+                                    <h3 className="text-2xl font-bold text-slate-800">
+                                        {profile.skill}
+                                    </h3>
+                                </div>
 
-                        <div className="mt-6 border-t pt-4">
-                            <h3 className="font-bold mb-3">
-                                Verification Status
-                            </h3>
+                                <div className="bg-gray-50 p-4 rounded-xl">
+                                    <p className="text-gray-500 text-base font-medium">
+                                        Location
+                                    </p>
 
-                            <p>
-                                Mobile:{" "}
-                                {profile.isMobileVerified
-                                    ? "✅ Verified"
-                                    : "❌ Not Verified"}
-                            </p>
+                                    <h3 className="text-2xl font-bold text-slate-800">
+                                        {profile.location}
+                                    </h3>
+                                </div>
+
+                                <div className="bg-gray-50 p-4 rounded-xl">
+                                    <p className="text-gray-500 text-base font-medium">
+                                        Expected Wage
+                                    </p>
+
+                                    <h3 className="text-2xl font-bold text-green-600">
+                                        ₹{profile.wage}
+                                    </h3>
+                                </div>
+
+                                <div className="bg-gray-50 p-4 rounded-xl">
+                                    <p className="text-gray-500 text-base font-medium">
+                                        Experience
+                                    </p>
+
+                                    <h3 className="text-2xl font-bold text-purple-600">
+                                        {profile.experience || 0} Years
+                                    </h3>
+                                </div>
+
+                                <div className="md:col-span-2 bg-gray-50 p-4 rounded-xl">
+                                    <p className="text-gray-600 text-base font-medium mb-2">
+                                        About Me
+                                    </p>
+
+                                    <p className="text-lg text-slate-700 leading-relaxed">
+                                        {profile.about || "Not added yet"}
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            <div className="mt-8 bg-gray-50 rounded-2xl p-6 border border-gray-200">
+                                <h3 className="text-2xl font-bold text-slate-800 mb-5">
+                                    🔒 Verification Status
+                                </h3>
+
+                                <div className="mb-4">
+                                    <span className={`w-full py-4 text-lg font-bold rounded-xl rounded-full font-semibold ${profile.isMobileVerified
+                                        ? "bg-green-100 text-green-700"
+                                        : "bg-red-100 text-red-700"
+                                        }`}>
+                                        {profile.isMobileVerified
+                                            ? "📱 Mobile Verified"
+                                            : "📱 Mobile Not Verified"}
+                                    </span>
+                                </div>
 
 
-                            {!profile.isMobileVerified && (
-                                <div className="mt-3 space-y-2">
+                                {!profile.isMobileVerified && (
+                                    <div className="mt-3 space-y-2">
 
-                                    {!otpSent ? (
-
-                                        <button
-                                            onClick={sendOtp}
-                                            className="bg-blue-600 text-white px-4 py-2 rounded"
-                                        >
-                                            Send OTP
-                                        </button>
-
-                                    ) : (
-
-                                        <>
-                                            <input
-                                                type="text"
-                                                placeholder="Enter OTP"
-                                                value={otp}
-                                                onChange={(e) =>
-                                                    setOtp(e.target.value)
-                                                }
-                                                className="border p-2 rounded w-full"
-                                            />
+                                        {!otpSent ? (
 
                                             <button
-                                                onClick={verifyOtp}
-                                                className="bg-green-600 text-white px-4 py-2 rounded"
+                                                onClick={sendOtp}
+                                                className="bg-blue-600 text-white w-full py-4 text-lg font-bold rounded-xl rounded"
                                             >
-                                                Verify OTP
+                                                Send OTP
                                             </button>
-                                        </>
-                                    )}
 
+                                        ) : (
+
+                                            <>
+                                                <input
+                                                    type="text"
+                                                    placeholder="Enter OTP"
+                                                    value={otp}
+                                                    onChange={(e) =>
+                                                        setOtp(e.target.value)
+                                                    }
+                                                    className="border p-2 rounded w-full"
+                                                />
+
+                                                <button
+                                                    onClick={verifyOtp}
+                                                    className="bg-green-600 text-white w-full py-4 text-lg font-bold rounded-xl rounded"
+                                                >
+                                                    Verify OTP
+                                                </button>
+                                            </>
+                                        )}
+
+                                    </div>
+                                )}
+
+                                <div className="mb-4">
+                                    <span className={`w-full py-4 text-lg font-bold rounded-xl rounded-full font-semibold ${profile.isAadhaarVerified
+                                        ? "bg-blue-100 text-blue-700"
+                                        : "bg-yellow-100 text-yellow-700"
+                                        }`}>
+                                        {profile.isAadhaarVerified
+                                            ? "🪪 Aadhaar Verified"
+                                            : "🪪 Aadhaar Pending"}
+                                    </span>
                                 </div>
-                            )}
 
-                            <p>
-                                Aadhaar:{" "}
-                                {profile.isAadhaarVerified
-                                    ? "✅ Verified"
-                                    : "⏳ Pending"}
-                            </p>
+                                {!profile.isAadhaarVerified && (
+                                    <div className="mt-3">
 
-                            {!profile.isAadhaarVerified && (
-                                <div className="mt-3">
+                                        <input
+                                            type="file"
+                                            onChange={(e) =>
+                                                setAadhaarFile(
+                                                    e.target.files[0]
+                                                )
+                                            }
+                                        />
 
-                                    <input
-                                        type="file"
-                                        onChange={(e) =>
-                                            setAadhaarFile(
-                                                e.target.files[0]
-                                            )
-                                        }
-                                    />
+                                        <button
+                                            onClick={uploadAadhaar}
+                                            className="bg-blue-600 text-white w-full py-4 text-lg font-bold rounded-xl rounded ml-2"
+                                        >
+                                            Upload Aadhaar
+                                        </button>
 
-                                    <button
-                                        onClick={uploadAadhaar}
-                                        className="bg-blue-600 text-white px-4 py-2 rounded ml-2"
-                                    >
-                                        Upload Aadhaar
-                                    </button>
+                                    </div>
+                                )}
+                            </div>
 
-                                </div>
-                            )}
+                            <div className="mt-6">
+                                <a
+                                    href={`https://wa.me/91${profile.phone}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold"
+                                >
+                                    💬 Contact on WhatsApp
+                                </a>
+                            </div>
+                        </>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                            <div>
+                                <p className="text-gray-500">
+                                    Company Name
+                                </p>
+
+                                <h3 className="text-2xl font-bold text-slate-800">
+                                    {profile.companyName}
+                                </h3>
+                            </div>
+
+                            <div>
+                                <p className="text-gray-500">
+                                    Phone
+                                </p>
+
+                                <h3 className="text-2xl font-bold text-slate-800">
+                                    {profile.phone}
+                                </h3>
+                            </div>
+
+                            <div>
+                                <p className="text-gray-500">
+                                    Location
+                                </p>
+
+                                <h3 className="text-2xl font-bold text-slate-800">
+                                    {profile.location}
+                                </h3>
+                            </div>
+
+                            <div>
+                                <p className="text-gray-500">
+                                    Rating
+                                </p>
+
+                                <h3 className="text-2xl font-bold text-yellow-500">
+                                    ⭐ {Number(profile.rating || 0).toFixed(1)}
+                                </h3>
+
+                                <p className="text-base font-medium text-gray-500">
+                                    {profile.totalRatings || 0} Ratings
+                                </p>
+                            </div>
+
                         </div>
-
-                        <div className="mt-6">
-                            <a
-                                href={`https://wa.me/91${profile.phone}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-green-600 text-white px-4 py-2 rounded inline-block"
-                            >
-                                WhatsApp
-                            </a>
-                        </div>
-                    </>
-                ) : (
-                    <>
-                        <p>
-                            <strong>Company Name:</strong>{" "}
-                            {profile.companyName}
-                        </p>
-
-                        <p>
-                            <strong>Phone:</strong>{" "}
-                            {profile.phone}
-                        </p>
-
-                        <p>
-                            <strong>Location:</strong>{" "}
-                            {profile.location}
-                        </p>
-                    </>
-                )}
+                    )}
+                </div>
             </div>
         </div>
     );

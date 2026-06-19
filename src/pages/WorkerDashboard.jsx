@@ -2,14 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
-
-
 const WorkerDashboard = () => {
     const navigate = useNavigate();
 
     const [profile, setProfile] = useState(null);
     const [applicationsCount, setApplicationsCount] = useState(0);
-    const [reviews, setReviews] = useState([]);
 
     const [stats, setStats] = useState({
         totalApplications: 0,
@@ -23,13 +20,9 @@ const WorkerDashboard = () => {
         fetchAllStats();
     }, []);
 
-
     const fetchAllStats = async () => {
-
         try {
-
-            const phone =
-                localStorage.getItem("userPhone");
+            const phone = localStorage.getItem("userPhone");
 
             const response = await axios.get(
                 `${import.meta.env.VITE_API_URL}/api/applications/worker-stats/${phone}`
@@ -38,15 +31,13 @@ const WorkerDashboard = () => {
             setStats(response.data);
 
         } catch (error) {
-
             console.log(error);
-
         }
-
     };
 
     const fetchDashboardData = async () => {
         try {
+
             const phone = localStorage.getItem("userPhone");
 
             const profileResponse = await axios.get(
@@ -59,35 +50,12 @@ const WorkerDashboard = () => {
                 `${import.meta.env.VITE_API_URL}/api/applications/worker/${phone}`
             );
 
-            setApplicationsCount(applicationResponse.data.length);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    useEffect(() => {
-        fetchStats();
-    }, []);
-
-    const fetchStats = async () => {
-        try {
-
-            const phone =
-                localStorage.getItem("userPhone");
-
-            const response =
-                await axios.get(
-                    `${import.meta.env.VITE_API_URL}/api/applications/count/${phone}`
-                );
-
             setApplicationsCount(
-                response.data.count
+                applicationResponse.data.length
             );
 
         } catch (error) {
-
             console.log(error);
-
         }
     };
 
@@ -115,193 +83,221 @@ const WorkerDashboard = () => {
 
     const completionPercentage = Math.round(
         (completionFields.filter(Boolean).length /
-            completionFields.length) *
-        100
+            completionFields.length) * 100
     );
 
     return (
         <div className="min-h-screen bg-gray-100 p-6">
 
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-7xl mx-auto">
 
-                <div className="bg-white rounded-lg shadow p-6 mb-6">
+                {/* Hero Section */}
 
-                    <h1 className="text-3xl font-bold">
-                        Welcome {profile.name} 👋
+                <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-3xl shadow-lg p-5 md:p-8 mb-8">
+
+                    <h1 className="text-xl md:text-5xl font-bold mb-3 break-words">
+                        👋 Welcome Back, {profile.name}
                     </h1>
 
-                    <p className="text-gray-600 mt-2">
-                        Manage your profile and job applications.
+                    <p className="text-xl text-blue-100">
+                        Manage your jobs, applications and profile from one place.
                     </p>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-
-                        <div className="bg-white p-4 rounded shadow">
-                            <p className="text-gray-500">
-                                Applications
-                            </p>
-
-                            <h2 className="text-2xl font-bold">
-                                {stats.totalApplications}
-                            </h2>
-                        </div>
-
-                        <div className="bg-white p-4 rounded shadow">
-                            <p className="text-gray-500">
-                                Accepted
-                            </p>
-
-                            <h2 className="text-2xl font-bold">
-                                {stats.acceptedJobs}
-                            </h2>
-                        </div>
-
-                        <div className="bg-white p-4 rounded shadow">
-                            <p className="text-gray-500">
-                                Completed
-                            </p>
-
-                            <h2 className="text-2xl font-bold">
-                                {stats.completedJobs}
-                            </h2>
-                        </div>
-
-                        <div className="bg-white p-4 rounded shadow">
-                            <p className="text-gray-500">
-                                Rating
-                            </p>
-
-                            <h2 className="text-2xl font-bold">
-                                ⭐ {stats.rating}
-                            </h2>
-                        </div>
-
-                    </div>
                 </div>
 
-                {/* Statistics */}
+                {/* Main Statistics */}
 
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
 
-                    <div className="bg-white p-6 rounded-lg shadow">
-                        <h2 className="text-gray-500 text-sm">
+                    <div className="bg-white p-6 rounded-2xl shadow-md hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+                        <p className="text-gray-500">
+                            📄 Applications
+                        </p>
+
+                        <h2 className="text-2xl md:text-5xl font-bold text-blue-600 mt-2">
+                            {stats.totalApplications}
+                        </h2>
+                    </div>
+
+                    <div className="bg-white p-6 rounded-2xl shadow-md hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+                        <p className="text-gray-500">
+                            ✅ Accepted Jobs
+                        </p>
+
+                        <h2 className="text-2xl md:text-5xl font-bold text-green-600 mt-2">
+                            {stats.acceptedJobs}
+                        </h2>
+                    </div>
+
+                    <div className="bg-white p-6 rounded-2xl shadow-md hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+                        <p className="text-gray-500">
+                            🏁 Completed Jobs
+                        </p>
+
+                        <h2 className="text-2xl md:text-5xl font-bold text-purple-600 mt-2">
+                            {stats.completedJobs}
+                        </h2>
+                    </div>
+
+                    <div className="bg-white p-6 rounded-2xl shadow-md hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+                        <p className="text-gray-500">
+                            ⭐ Rating
+                        </p>
+
+                        <h2 className="text-2xl md:text-5xl font-bold text-yellow-500 mt-2">
+                            {stats.rating}
+                        </h2>
+                    </div>
+
+                </div>
+
+                {/* Secondary Statistics */}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+
+                    <div className="bg-white p-6 rounded-2xl shadow-md hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+
+                        <p className="text-gray-500">
                             Profile Completion
-                        </h2>
+                        </p>
 
-                        <p className="text-3xl font-bold text-green-600 mt-2">
+                        <h2 className="text-3xl font-bold text-green-600 mt-2">
                             {completionPercentage}%
-                        </p>
+                        </h2>
+
                     </div>
 
-                    <div className="bg-white p-6 rounded-lg shadow">
-                        <h2 className="text-gray-500 text-sm">
+                    <div className="bg-white p-6 rounded-2xl shadow-md hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+
+                        <p className="text-gray-500">
                             Applications Submitted
+                        </p>
+
+                        <h2 className="text-3xl font-bold text-blue-600 mt-2">
+                            {applicationsCount}
                         </h2>
 
-                        <p className="text-3xl font-bold text-blue-600 mt-2">
-                            {applicationsCount}
-                        </p>
                     </div>
 
-                    <div className="bg-white p-6 rounded-lg shadow">
-                        <h2 className="text-gray-500 text-sm">
-                            Experience
-                        </h2>
+                    <div className="bg-white p-6 rounded-2xl shadow-md hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
 
-                        <p className="text-3xl font-bold text-purple-600 mt-2">
-                            {profile.experience || 0}
+                        <p className="text-gray-500">
+                            Experience
                         </p>
 
-                        <p className="text-sm text-gray-500">
+                        <h2 className="text-3xl font-bold text-purple-600 mt-2">
+                            {profile.experience || 0}
+                        </h2>
+
+                        <p className="text-gray-500">
                             Years
                         </p>
+
                     </div>
 
-                    <div className="bg-white p-6 rounded-lg shadow">
-                        <h2 className="text-gray-500 text-sm">
-                            Verification
-                        </h2>
+                    <div className="bg-white p-6 rounded-2xl shadow-md hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
 
-                        <p className="text-lg font-bold mt-2">
+                        <p className="text-gray-500">
+                            Verification
+                        </p>
+
+                        <h2 className="text-xl font-bold mt-2">
                             {profile.isAadhaarVerified
                                 ? "✅ Verified"
                                 : "⏳ Pending"}
-                        </p>
+                        </h2>
+
                     </div>
 
                 </div>
 
                 {/* Quick Actions */}
 
-                <h2 className="text-2xl font-bold mb-4">
-                    Quick Actions
-                </h2>
+                <div className="mb-6">
+
+                    <h2 className="text-2xl md:text-5xl font-bold text-indigo-700 text-center mb-3">
+                        Quick Actions
+                    </h2>
+
+                    <p className="text-center text-lg font-semibold text-indigo-400 mb-10">
+                        Access important features instantly
+                    </p>
+
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
 
-                    <div className="bg-white p-6 rounded-lg shadow">
-                        <h3 className="text-xl font-semibold mb-2">
-                            My Profile
+                    <div className="bg-white p-6 rounded-2xl shadow-md hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+
+                        <h3 className="text-2xl font-bold text-blue-600 mb-3">
+                            👤 My Profile
                         </h3>
 
-                        <p className="text-gray-600 mb-4">
+                        <p className="text-gray-600 mb-5">
                             View and update your profile.
                         </p>
 
                         <Link to="/profile">
-                            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl">
                                 View Profile
                             </button>
                         </Link>
+
                     </div>
 
-                    <div className="bg-white p-6 rounded-lg shadow">
-                        <h3 className="text-xl font-semibold mb-2">
-                            Available Jobs
+                    <div className="bg-white p-6 rounded-2xl shadow-md hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+
+                        <h3 className="text-2xl font-bold text-green-600 mb-3">
+                            💼 Available Jobs
                         </h3>
 
-                        <p className="text-gray-600 mb-4">
-                            Browse jobs posted by employers.
+                        <p className="text-gray-600 mb-5">
+                            View and apply for available jobs.
                         </p>
 
                         <Link to="/available-jobs">
-                            <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
-                                Browse Jobs
+                            <button className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl">
+                                View Jobs
                             </button>
                         </Link>
+
                     </div>
 
-                    <div className="bg-white p-6 rounded-lg shadow">
-                        <h3 className="text-xl font-semibold mb-2">
-                            My Applications
+                    <div className="bg-white p-6 rounded-2xl shadow-md hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+
+                        <h3 className="text-2xl font-bold text-purple-600 mb-3">
+                            📄 Applications
                         </h3>
 
-                        <p className="text-gray-600 mb-4">
-                            Track your application status.
+                        <p className="text-gray-600 mb-5">
+                            Track application status.
                         </p>
 
                         <Link to="/my-applications">
-                            <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
+                            <button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl">
                                 View Applications
                             </button>
                         </Link>
+
                     </div>
 
-                    <div className="bg-white p-6 rounded-lg shadow">
-                        <h3 className="text-xl font-semibold mb-2">
-                            Logout
+                    <div className="bg-white p-6 rounded-2xl shadow-md hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+
+                        <h3 className="text-2xl font-bold text-red-600 mb-3">
+                            🚪 Logout
                         </h3>
 
-                        <p className="text-gray-600 mb-4">
-                            Sign out of your account.
+                        <p className="text-gray-600 mb-5">
+                            Sign out safely.
                         </p>
 
                         <button
                             onClick={handleLogout}
-                            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
+                            className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl"
                         >
                             Logout
                         </button>
+
                     </div>
 
                 </div>

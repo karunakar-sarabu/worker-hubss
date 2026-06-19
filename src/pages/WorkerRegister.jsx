@@ -1,6 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
+
 const WorkerRegister = () => {
+    const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [registrationSuccess, setRegistrationSuccess] = useState(false);
+
     const [formData, setFormData] = useState({
         name: "",
         phone: "",
@@ -8,18 +14,17 @@ const WorkerRegister = () => {
         location: "",
         wage: "",
         password: ""
-    })
+    });
 
     const handleChange = (e) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
-        })
-    }
-    
-    const handleSubmit = async (e) => {
+        });
+    };
 
-        e.preventDefault()
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
         if (
             !formData.name ||
@@ -29,183 +34,282 @@ const WorkerRegister = () => {
             !formData.wage ||
             !formData.password
         ) {
-            // alert("Please fill all fields")
-            return
+            alert("Please fill all fields");
+            return;
         }
-
+        if (!/^\d{10}$/.test(formData.phone)) {
+            alert("Please enter a valid 10-digit phone number");
+            return;
+        }
         try {
-            console.log("API URL =", import.meta.env.VITE_API_URL);
-            const response = await axios.post(
+            setLoading(true);
+
+            await axios.post(
                 `${import.meta.env.VITE_API_URL}/api/workers/register`,
                 formData
-            )
+            );
 
-            // alert(response.data.message)
-
-            setFormData({
-                name: "",
-                phone: "",
-                skill: "",
-                location: "",
-                wage: "",
-                password: ""
-            })
-
-            console.log(response.data)
+            setRegistrationSuccess(true);
 
         } catch (error) {
 
-            // alert(error.response?.data?.message || "Something went wrong")
+            alert(
+                error.response?.data?.message ||
+                "Registration failed"
+            );
+
+        } finally {
+
+            setLoading(false);
 
         }
-    }
-    return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 py-10">
+    };
 
-            <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+    if (registrationSuccess) {
+        return (
+            <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
 
-                <h1 className="text-3xl font-bold text-center mb-6">
-                    Worker Registration
-                </h1>
+                <div className="bg-white rounded-3xl shadow-xl p-10 max-w-lg w-full text-center">
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-
-                    <div>
-                        <label className="block mb-1 font-medium">
-                            Full Name
-                        </label>
-                        <input
-                            type="text"
-                            name="name"
-                            placeholder="Enter your name"
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
-                            value={formData.name}
-                            onChange={handleChange}
-                        />
-                        {/* <input
-                            type="text"
-                            placeholder="Enter your name"
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
-                        /> */}
+                    <div className="text-6xl mb-4">
+                        ✅
                     </div>
 
-                    <div>
-                        <label className="block mb-1 font-medium">
-                            Phone Number
-                        </label>
-                        <input
-                            type="tel"
-                            name="phone"
-                            placeholder="Enter phone number"
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
-                            value={formData.phone}
-                            onChange={handleChange}
-                        />
-                        {/* <input
-                            type="tel"
-                            placeholder="Enter phone number"
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
-                        /> */}
-                    </div>
+                    <h1 className="text-3xl font-bold text-green-600 mb-4">
+                        Registration Successful
+                    </h1>
 
-                    <div>
-                        <label className="block mb-1 font-medium">
-                            Skill Category
-                        </label>
-                        <select
-                            name="skill"
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
-                            value={formData.skill}
-                            onChange={handleChange}
-                        >
-                            <option value="">Select Skill</option>
-                            <option value="Construction">Construction</option>
-                            <option value="Agriculture">Agriculture</option>
-                            <option value="Electrician">Electrician</option>
-                            <option value="Plumber">Plumber</option>
-                            <option value="Painter">Painter</option>
-                            <option value="Carpenter">Carpenter</option>
-                        </select>
-                        {/* <select className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none">
-                            <option>Construction</option>
-                            <option>Agriculture</option>
-                            <option>Electrician</option>
-                            <option>Plumber</option>
-                            <option>Painter</option>
-                            <option>Carpenter</option>
-                        </select> */}
-                    </div>
+                    <p className="text-gray-600 mb-8">
+                        Welcome to Daily Wage Connect.
+                        Your worker account has been created successfully.
+                    </p>
 
-                    <div>
-                        <label className="block mb-1 font-medium">
-                            Location
-                        </label>
-                        <input
-                            type="text"
-                            name="location"
-                            placeholder="Enter location"
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
-                            value={formData.location}
-                            onChange={handleChange}
-                        />
-                        {/* <input
-                            type="text"
-                            placeholder="Enter location"
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
-                        /> */}
-                    </div>
-
-                    <div>
-                        <label className="block mb-1 font-medium">
-                            Expected Daily Wage
-                        </label>
-                        <input
-                            type="number"
-                            name="wage"
-                            placeholder="Enter expected wage"
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
-                            value={formData.wage}
-                            onChange={handleChange}
-                        />
-                        {/* <input
-                            type="number"
-                            placeholder="Enter expected wage"
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
-                        /> */}
-                    </div>
-
-                    <div>
-                        <label className="block mb-1 font-medium">
-                            Password
-                        </label>
-                        <input
-                            type="password"
-                            name="password"
-                            placeholder="Enter password"
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
-                            value={formData.password}
-                            onChange={handleChange}
-                        />
-                        {/* <input
-                            type="password"
-                            placeholder="Enter password"
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
-                        /> */}
-                    </div>
-
-                    <button
-                        type="submit"
-                        className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
+                    <Link
+                        to="/login"
+                        className="block w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold"
                     >
-                        Register
-                    </button>
+                        Login Now
+                    </Link>
 
-                </form>
+                </div>
+
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen bg-gray-100">
+
+            {/* Hero Section */}
+
+            <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white py-12 px-6">
+
+                <div className="max-w-6xl mx-auto text-center">
+
+                    <h1 className="text-4xl md:text-5xl font-bold">
+                        Worker Registration
+                    </h1>
+
+                    <p className="mt-4 text-lg text-green-100">
+                        Join Daily Wage Connect and discover more job opportunities.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div className="max-w-6xl mx-auto px-6 py-10">
+
+                <div className="grid lg:grid-cols-2 gap-10 items-center">
+
+                    {/* Left Side */}
+
+                    <div className="hidden lg:block">
+
+                        <h2 className="text-4xl font-bold text-slate-800 mb-6">
+                            Build Your Career
+                        </h2>
+
+                        <p className="text-lg text-gray-600 mb-8">
+                            Create your profile and connect with employers looking for skilled workers.
+                        </p>
+
+                        <div className="space-y-4">
+
+                            <div className="bg-white p-5 rounded-2xl shadow">
+                                ✅ Apply for jobs easily
+                            </div>
+
+                            <div className="bg-white p-5 rounded-2xl shadow">
+                                ✅ Get discovered by employers
+                            </div>
+
+                            <div className="bg-white p-5 rounded-2xl shadow">
+                                ✅ Build your worker profile
+                            </div>
+
+                            <div className="bg-white p-5 rounded-2xl shadow">
+                                ✅ Connect through WhatsApp
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {/* Registration Form */}
+
+                    <div className="bg-white rounded-3xl shadow-xl p-8">
+
+                        <h2 className="text-3xl font-bold text-center mb-2">
+                            Register as Worker
+                        </h2>
+
+                        <p className="text-center text-gray-500 mb-8">
+                            Create your worker account
+                        </p>
+
+                        <form
+                            onSubmit={handleSubmit}
+                            className="space-y-5"
+                        >
+
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="Full Name"
+                                value={formData.name}
+                                onChange={handleChange}
+                                className="w-full border border-gray-300 rounded-xl p-3"
+                            />
+
+                            <input
+                                type="tel"
+                                name="phone"
+                                placeholder="Phone Number"
+                                value={formData.phone}
+                                onChange={handleChange}
+                                className="w-full border border-gray-300 rounded-xl p-3"
+                            />
+
+                            <select
+                                name="skill"
+                                value={formData.skill}
+                                onChange={handleChange}
+                                className="w-full border border-gray-300 rounded-xl p-3"
+                            >
+                                <option value="">
+                                    Select Skill
+                                </option>
+
+                                <option value="Construction">
+                                    Construction
+                                </option>
+
+                                <option value="Agriculture">
+                                    Agriculture
+                                </option>
+
+                                <option value="Electrician">
+                                    Electrician
+                                </option>
+
+                                <option value="Plumber">
+                                    Plumber
+                                </option>
+
+                                <option value="Painter">
+                                    Painter
+                                </option>
+
+                                <option value="Carpenter">
+                                    Carpenter
+                                </option>
+                            </select>
+
+                            <input
+                                type="text"
+                                name="location"
+                                placeholder="Location"
+                                value={formData.location}
+                                onChange={handleChange}
+                                className="w-full border border-gray-300 rounded-xl p-3"
+                            />
+
+                            <input
+                                type="number"
+                                name="wage"
+                                placeholder="Expected Daily Wage"
+                                value={formData.wage}
+                                onChange={handleChange}
+                                className="w-full border border-gray-300 rounded-xl p-3"
+                            />
+
+                            <div className="relative">
+
+                                <input
+                                    type={
+                                        showPassword
+                                            ? "text"
+                                            : "password"
+                                    }
+                                    name="password"
+                                    placeholder="Password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    className="w-full border border-gray-300 rounded-xl p-3"
+                                />
+
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        setShowPassword(
+                                            !showPassword
+                                        )
+                                    }
+                                    className="absolute right-4 top-3 text-blue-600 font-semibold"
+                                >
+                                    {showPassword
+                                        ? "Hide"
+                                        : "Show"}
+                                </button>
+
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-bold disabled:bg-gray-400"
+                            >
+                                {loading
+                                    ? "Registering..."
+                                    : "Register"}
+                            </button>
+
+                        </form>
+
+                        <div className="mt-6 text-center">
+
+                            <p className="text-gray-600">
+                                Already have an account?
+                            </p>
+
+                            <Link
+                                to="/login"
+                                className="text-blue-600 font-semibold"
+                            >
+                                Login Here
+                            </Link>
+
+                        </div>
+
+                    </div>
+
+                </div>
 
             </div>
 
         </div>
-    )
-}
+    );
+};
 
-export default WorkerRegister
+export default WorkerRegister;

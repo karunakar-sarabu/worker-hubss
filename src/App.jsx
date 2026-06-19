@@ -17,7 +17,7 @@ import Profile from "./pages/Profile";
 import Navbar from "./components/Navbar";
 import BrowseWorkers from "./pages/BrowseWorkers";
 import WorkerDetails from "./pages/WorkerDetails";
-
+import ForgotPassword from "./pages/ForgotPassword";
 function App() {
   return (
     <>
@@ -28,7 +28,10 @@ function App() {
         <Route path="/employer-register" element={<EmployerRegister />} />
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<NotFound />} />
-
+        <Route
+          path="/forgot-password"
+          element={<ForgotPassword />}
+        />
         <Route
           path="/worker-dashboard"
           element={

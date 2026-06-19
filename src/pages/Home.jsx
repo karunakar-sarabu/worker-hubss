@@ -5,16 +5,23 @@ import Categories from '../components/Categories'
 import FeaturedWorkers from '../components/FeaturedWorkers'
 import FeaturedJobs from '../components/FeaturedJobs'
 import Footer from '../components/Footer'
+import HowItWorks from "../components/HowItWorks";
+import TrustStats from "../components/TrustStats";
+import WhyChooseUs from '../components/WhyChooseUs'
+import CallToAction from "../components/CallToAction";
 
 const Home = () => {
   return (
     <>
-      {/* <Navbar /> */}
-      <Hero/>
-      <Categories/>
-      <FeaturedWorkers/>
-      <FeaturedJobs/>
-      <Footer/>
+       <Hero />
+       <WhyChooseUs/>
+      <FeaturedJobs />
+      <FeaturedWorkers />
+      <Categories />
+      <HowItWorks />
+      <TrustStats />
+      <CallToAction/>
+      <Footer />
     </>
   )
 }

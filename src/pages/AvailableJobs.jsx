@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -35,7 +34,7 @@ const AvailableJobs = () => {
                 }
             );
 
-            alert("Applied successfully");
+            alert("Application submitted successfully");
         } catch (error) {
             alert(
                 error.response?.data?.message ||
@@ -69,12 +68,19 @@ const AvailableJobs = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 p-6">
-            <h1 className="text-3xl font-bold mb-6">
-                Available Jobs
-            </h1>
+            <div className="mb-10 text-center">
 
-            <div className="bg-white p-4 rounded-lg shadow mb-6 grid md:grid-cols-3 gap-4">
+                <h1 className="text-4xl md:text-5xl font-bold text-blue-700">
+                    Available Jobs
+                </h1>
 
+                <p className="text-lg font-semibold text-blue-400 mt-3">
+                    Browse verified opportunities from trusted employers
+                </p>
+
+            </div>
+
+            <div className="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-2xl shadow-md hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
                 <input
                     type="text"
                     placeholder="Search Job Title"
@@ -82,7 +88,7 @@ const AvailableJobs = () => {
                     onChange={(e) =>
                         setSearchTerm(e.target.value)
                     }
-                    className="border p-2 rounded"
+                    className="border p-2 rounded w-full"
                 />
 
                 <input
@@ -92,7 +98,7 @@ const AvailableJobs = () => {
                     onChange={(e) =>
                         setLocationFilter(e.target.value)
                     }
-                    className="border p-2 rounded"
+                    className="border p-2 rounded w-full"
                 />
 
                 <select
@@ -100,7 +106,7 @@ const AvailableJobs = () => {
                     onChange={(e) =>
                         setMinWage(e.target.value)
                     }
-                    className="border p-2 rounded"
+                    className="border p-2 rounded w-full"
                 >
                     <option value="">
                         Any Wage
@@ -129,41 +135,40 @@ const AvailableJobs = () => {
                 {filteredJobs.map((job) => (
                     <div
                         key={job._id}
-                        className="bg-white p-6 rounded-lg shadow"
-                    >
-                        <h2 className="text-xl font-bold">
+                        className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+                        <h2 className="text-2xl font-bold text-slate-800">
                             {job.title}
                         </h2>
 
-                        <p className="mt-2">
+                        <p className="mt-2 text-gray-600">
                             {job.description}
                         </p>
 
-                        <p className="mt-2">
+                        <p className="mt-3 text-gray-700">
                             📍 {job.location}
                         </p>
 
-                        <p className="mt-2">
+                        <p className="mt-3 font-medium text-yellow-600">
                             ⭐ {job.employerRating?.toFixed(1) || 0}
                             {" "}
                             ({job.employerTotalRatings || 0} reviews)
                         </p>
 
                         {job.employerRating >= 4.5 && (
-                            <p className="text-green-600 font-semibold">
+                            <span className="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold ">
                                 ✅ Trusted Employer
-                            </p>
+                            </span>
                         )}
-                        
-                        <p className="mt-2 font-semibold text-green-600">
+
+
+                        <p className="text-2xl font-bold text-green-600">
                             ₹{job.wage}/day
                         </p>
 
                         <div className="flex gap-2 mt-4">
                             <button
                                 onClick={() => handleApply(job._id)}
-                                className="bg-blue-600 text-white px-4 py-2 rounded"
-                            >
+                                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-semibold ">
                                 Apply
                             </button>
 
@@ -171,8 +176,7 @@ const AvailableJobs = () => {
                                 href={`https://wa.me/91${job.employerPhone}?text=Hello, I am interested in the job: ${job.title}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-green-600 text-white px-4 py-2 rounded"
-                            >
+                                className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl font-semibold text-center ">
                                 WhatsApp
                             </a>
                         </div>
@@ -182,8 +186,16 @@ const AvailableJobs = () => {
             </div>
 
             {filteredJobs.length === 0 && (
-                <div className="text-center text-gray-500 mt-8">
-                    No jobs found.
+                <div className="text-center mt-10">
+
+                    <h2 className="text-2xl font-bold text-gray-600">
+                        No Jobs Found
+                    </h2>
+
+                    <p className="text-gray-500 mt-2">
+                        Try changing filters or search terms.
+                    </p>
+
                 </div>
             )}
         </div>

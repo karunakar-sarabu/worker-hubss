@@ -1,18 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import axios from "axios";
 
 const EmployerDashboard = () => {
     const navigate = useNavigate();
+
     const [jobsCount, setJobsCount] = useState(0);
     const [applicantsCount, setApplicantsCount] = useState(0);
     const [completedJobsCount, setCompletedJobsCount] = useState(0);
-
-    const handleLogout = () => {
-        localStorage.clear();
-        navigate("/login");
-    };
+    const [companyName, setCompanyName] = useState("");
 
     useEffect(() => {
         fetchStats();
@@ -28,170 +24,243 @@ const EmployerDashboard = () => {
 
             setJobsCount(response.data.count);
 
-            const applicantsResponse =
-                await axios.get(
-                    `${import.meta.env.VITE_API_URL}/api/applications/employer/count/${phone}`
-                );
-
-            setApplicantsCount(
-                applicantsResponse.data.count
+            const applicantsResponse = await axios.get(
+                `${import.meta.env.VITE_API_URL}/api/applications/employer/count/${phone}`
             );
 
-            const completedResponse =
-                await axios.get(
-                    `${import.meta.env.VITE_API_URL}/api/applications/employer-stats/${phone}`
-                );
+            setApplicantsCount(applicantsResponse.data.count);
+
+            const completedResponse = await axios.get(
+                `${import.meta.env.VITE_API_URL}/api/applications/employer-stats/${phone}`
+            );
 
             setCompletedJobsCount(
                 completedResponse.data.completedJobs
             );
-
+            
+            const employerResponse = await axios.get(
+                `${import.meta.env.VITE_API_URL}/api/employers/${phone}`
+            );
+            
+            setCompanyName(
+                employerResponse.data.companyName
+            );
+            
+            
         } catch (error) {
             console.log(error);
         }
     };
 
+    const handleLogout = () => {
+        localStorage.clear();
+        navigate("/login");
+    };
+
     return (
         <div className="min-h-screen bg-gray-100 p-6">
 
-            {/* Welcome Section */}
-            <div className="bg-white p-6 rounded-xl shadow mb-8">
-                <h1 className="text-4xl font-bold text-blue-700">
-                    Employer Dashboard
-                </h1>
+            <div className="max-w-7xl mx-auto">
 
-                <p className="text-gray-600 mt-2">
-                    Manage jobs, applicants and company profile.
-                </p>
-            </div>
+                {/* Hero Section */}
 
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="bg-gradient-to-r from-green-600 to-emerald-700 text-white rounded-3xl shadow-lg p-8 mb-10">
 
-                <div className="bg-white p-6 rounded-xl shadow">
-                    <h3 className="text-gray-500">
-                        Jobs Posted
-                    </h3>
+                    <h1 className="text-xl  md:text-5xl font-bold mb-3">
+                        🏢 Welcome, {companyName || "Employer"}
+                    </h1>
 
-                    <p className="text-3xl font-bold text-blue-600">
-                        {jobsCount}
-                    </p>
-                </div>
-
-                <div className="bg-white p-6 rounded-xl shadow">
-                    <h3 className="text-gray-500">
-                        Applicants
-                    </h3>
-
-                    <p className="text-3xl font-bold text-purple-600">
-                        {applicantsCount}
-                    </p>
-                </div>
-
-                <div className="bg-white p-6 rounded-xl shadow">
-                    <h3 className="text-gray-500">
-                        Completed Jobs
-                    </h3>
-
-                    <p className="text-3xl font-bold text-green-600">
-                        {completedJobsCount}
-                    </p>
-                </div>
-
-            </div>
-
-            {/* Quick Actions */}
-            <h2 className="text-2xl font-bold mb-4">
-                Quick Actions
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-
-                {/* Profile */}
-                <div className="bg-white p-6 rounded-xl shadow">
-                    <h3 className="text-xl font-semibold mb-2">
-                        My Profile
-                    </h3>
-
-                    <p className="text-gray-600 mb-4">
-                        View and update company details.
+                    <p className="text-lg md:text-xl text-green-100">
+                        Manage jobs, applicants and workforce from one place.
                     </p>
 
-                    <Link to="/profile">
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                            View Profile
-                        </button>
-                    </Link>
                 </div>
 
-                {/* Post Job */}
-                <div className="bg-white p-6 rounded-xl shadow">
-                    <h3 className="text-xl font-semibold mb-2">
-                        Post Job
-                    </h3>
+                {/* Statistics */}
 
-                    <p className="text-gray-600 mb-4">
-                        Create a new job posting.
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+
+                    <div className="bg-white p-6 rounded-2xl shadow-md hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+
+                        <p className="text-gray-500 text-sm">
+                            📢 Jobs Posted
+                        </p>
+
+                        <h2 className="text-4xl font-bold text-blue-600 mt-3">
+                            {jobsCount}
+                        </h2>
+
+                    </div>
+
+                    <div className="bg-white p-6 rounded-2xl shadow-md hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+
+                        <p className="text-gray-500 text-sm">
+                            👷 Applicants
+                        </p>
+
+                        <h2 className="text-4xl font-bold text-purple-600 mt-3">
+                            {applicantsCount}
+                        </h2>
+
+                    </div>
+
+                    <div className="bg-white p-6 rounded-2xl shadow-md hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+
+                        <p className="text-gray-500 text-sm">
+                            ✅ Completed Jobs
+                        </p>
+
+                        <h2 className="text-4xl font-bold text-green-600 mt-3">
+                            {completedJobsCount}
+                        </h2>
+
+                    </div>
+
+                </div>
+
+                {/* Quick Actions */}
+
+                <div className="text-center mb-10">
+
+                    <h2 className="text-4xl font-bold text-indigo-700 mb-3">
+                        Quick Actions
+                    </h2>
+
+                    <p className="text-lg font-semibold text-indigo-400">
+                        Manage your jobs and workers efficiently
                     </p>
 
-                    <Link to="/post-job">
-                        <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
-                            Post Job
-                        </button>
-                    </Link>
                 </div>
 
-                {/* My Jobs */}
-                <div className="bg-white p-6 rounded-xl shadow">
-                    <h3 className="text-xl font-semibold mb-2">
-                        My Jobs
-                    </h3>
+                {/* Action Cards */}
 
-                    <p className="text-gray-600 mb-4">
-                        View all jobs posted by you.
-                    </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
 
-                    <Link to="/my-jobs">
-                        <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded">
-                            View Jobs
-                        </button>
-                    </Link>
+                    {/* Profile */}
+
+                    <div className="bg-white p-6 rounded-2xl shadow-md flex flex-col hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+
+                        <h3 className="text-2xl font-bold text-blue-600 mb-3">
+                            👤 Profile
+                        </h3>
+
+                        <p className="text-gray-600 min-h-[60px]">
+                            View and update company profile.
+                        </p>
+
+                        <div className="mt-auto">
+                            <Link to="/profile">
+                                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl">
+                                    View Profile
+                                </button>
+                            </Link>
+                        </div>
+
+                    </div>
+
+                    {/* Post Job */}
+
+                    <div className="bg-white p-6 rounded-2xl shadow-md flex flex-col hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+
+                        <h3 className="text-2xl font-bold text-green-600 mb-3">
+                            ➕ Post Job
+                        </h3>
+
+                        <p className="text-gray-600 min-h-[60px]">
+                            Create and publish a new job posting.
+                        </p>
+
+                        <div className="mt-auto">
+                            <Link to="/post-job">
+                                <button className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl">
+                                    Post Job
+                                </button>
+                            </Link>
+                        </div>
+
+                    </div>
+
+                    {/* My Jobs */}
+
+                    <div className="bg-white p-6 rounded-2xl shadow-md flex flex-col hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+
+                        <h3 className="text-2xl font-bold text-purple-600 mb-3">
+                            📄 My Jobs
+                        </h3>
+
+                        <p className="text-gray-600 min-h-[60px]">
+                            View, edit and manage all posted jobs.
+                        </p>
+
+                        <div className="mt-auto">
+                            <Link to="/my-jobs">
+                                <button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl">
+                                    View Jobs
+                                </button>
+                            </Link>
+                        </div>
+
+                    </div>
+
+                    {/* Browse Workers */}
+
+                    <div className="bg-white p-6 rounded-2xl shadow-md flex flex-col hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+
+                        <h3 className="text-2xl font-bold text-orange-600 mb-3">
+                            👷 Workers
+                        </h3>
+
+                        <p className="text-gray-600 min-h-[60px]">
+                            Browse and hire skilled workers.
+                        </p>
+
+                        <div className="mt-auto">
+                            <Link to="/browse-workers">
+                                <button className="w-full bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-xl">
+                                    Browse Workers
+                                </button>
+                            </Link>
+                        </div>
+
+                    </div>
+
+                    {/* Applicants */}
+
+                    <div className="bg-white p-6 rounded-2xl shadow-md flex flex-col hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+
+                        <h3 className="text-2xl font-bold text-indigo-600 mb-3">
+                            📋 Applicants
+                        </h3>
+
+                        <p className="text-gray-600 min-h-[60px]">
+                            Review worker applications and hiring status.
+                        </p>
+
+                        <div className="mt-auto">
+                            <Link to="/applicants">
+                                <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl">
+                                    View Applicants
+                                </button>
+                            </Link>
+                        </div>
+
+                    </div>
+
                 </div>
 
+                {/* Logout */}
 
-                <Link to="/browse-workers">
-                    <button className="bg-green-600 text-white px-4 py-2 rounded">
-                        Browse Workers
+                <div className="text-center mt-12">
+
+                    <button
+                        onClick={handleLogout}
+                        className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-xl text-lg font-semibold shadow-md"
+                    >
+                        🚪 Logout
                     </button>
-                </Link>
 
-                {/* Applicants */}
-                <div className="bg-white p-6 rounded-xl shadow">
-                    <h3 className="text-xl font-semibold mb-2">
-                        Applicants
-                    </h3>
-
-                    <p className="text-gray-600 mb-4">
-                        Review worker applications.
-                    </p>
-
-                    <Link to="/applicants">
-                        <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
-                            View Applicants
-                        </button>
-                    </Link>
                 </div>
 
-            </div>
-
-            {/* Logout */}
-            <div className="mt-8">
-                <button
-                    onClick={handleLogout}
-                    className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg"
-                >
-                    Logout
-                </button>
             </div>
 
         </div>
