@@ -86,16 +86,14 @@ const MyJobs = () => {
 
                 {/* Hero */}
 
-                <div className="flex flex-col md:flex-row bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-3xl shadow-xl p-8 mb-8">
-
-                    <h1 className="text-xl md:text-5xl font-bold">
+                <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-3xl p-8 shadow-lg">
+                    <h1 className="text-4xl font-bold mb-2">
                         📋 My Jobs
                     </h1>
 
-                    <p className="mt-3 text-sm md:text-lg text-blue-100">
-                        Manage your job postings and keep track of hiring opportunities.
+                    <p className="text-blue-100 text-lg">
+                        Manage your job postings and track hiring opportunities.
                     </p>
-
                 </div>
 
                 {/* Stats */}
