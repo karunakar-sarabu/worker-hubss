@@ -52,7 +52,7 @@ const Hero = () => {
         <p className="text-green-400 font-semibold mb-4">
           Daily Wage Connect
         </p>
-
+      <h2 className="text-white text-2xl">🚀 Daily Wage Connect is currently in Beta. We are actively improving features and fixing issues to provide a better experience for workers and employers. Thank you for your support and feedback.</h2>
         <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight">
           Find Daily Jobs.
           <br />

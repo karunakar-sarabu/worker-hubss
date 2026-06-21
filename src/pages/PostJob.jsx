@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 const PostJob = () => {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    const [loadingAI, setLoadingAI] = useState(false);
 
     const [formData, setFormData] = useState({
         title: "",
@@ -12,7 +14,7 @@ const PostJob = () => {
         wage: "",
     });
 
-    const [loading, setLoading] = useState(false);
+
 
     const handleChange = (e) => {
         setFormData({
@@ -21,6 +23,47 @@ const PostJob = () => {
         });
     };
 
+
+    const handleGenerateDescription = async () => {
+
+        if (
+            !formData.title ||
+            !formData.location ||
+            !formData.wage
+        ) {
+            alert("Please enter title, location and wage first");
+            return;
+        }
+
+        try {
+
+            setLoadingAI(true);
+
+            const response = await axios.post(
+                `${import.meta.env.VITE_API_URL}/api/ai/generate-job-description`,
+                {
+                    title: formData.title,
+                    skill: formData.title,
+                    location: formData.location,
+                    wage: formData.wage,
+                }
+            );
+
+            setFormData({
+                ...formData,
+                description: response.data.description,
+            });
+
+        } catch (error) {
+
+            alert("Failed to generate description");
+
+        } finally {
+
+            setLoadingAI(false);
+
+        }
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -118,6 +161,17 @@ const PostJob = () => {
                                 <label className="block font-semibold mb-2">
                                     Job Description
                                 </label>
+
+                                <button
+                                    type="button"
+                                    onClick={handleGenerateDescription}
+                                    disabled={loadingAI}
+                                    className="mb-3 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold disabled:bg-gray-400"
+                                >
+                                    {loadingAI
+                                        ? "Generating..."
+                                        : "✨ Generate with AI"}
+                                </button>
 
                                 <textarea
                                     name="description"

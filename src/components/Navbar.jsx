@@ -8,7 +8,7 @@ const Navbar = () => {
 
     const role = localStorage.getItem("role");
     const token = localStorage.getItem("token");
-
+    
     if (
         location.pathname === "/login" ||
         location.pathname === "/worker-register" ||

@@ -9,7 +9,9 @@ const Profile = () => {
     const [aadhaarFile, setAadhaarFile] = useState(null);
     const [otp, setOtp] = useState("");
     const [otpSent, setOtpSent] = useState(false);
-
+    const [loadingAI, setLoadingAI] = useState(false);
+    const [loadingAdvice, setLoadingAdvice] = useState(false);
+    const [skillAdvice, setSkillAdvice] = useState("");
 
     useEffect(() => {
         fetchProfile();
@@ -147,6 +149,79 @@ const Profile = () => {
 
         }
 
+    };
+
+
+    const handleGenerateProfile = async () => {
+
+        if (
+            !formData.skill ||
+            !formData.experience
+        ) {
+            alert("Please enter skill and experience first");
+            return;
+        }
+
+        try {
+
+            setLoadingAI(true);
+
+            const response = await axios.post(
+                `${import.meta.env.VITE_API_URL}/api/ai/generate-worker-profile`,
+                {
+                    skill: formData.skill,
+                    experience: formData.experience
+                }
+            );
+
+            setFormData({
+                ...formData,
+                about: response.data.profile
+            });
+
+        } catch (error) {
+
+            alert("Failed to generate profile");
+
+        } finally {
+
+            setLoadingAI(false);
+
+        }
+    };
+    const handleSkillGapAdvice = async () => {
+
+        if (
+            !formData.skill ||
+            !formData.experience
+        ) {
+            alert("Please enter skill and experience first");
+            return;
+        }
+
+        try {
+
+            setLoadingAdvice(true);
+
+            const response = await axios.post(
+                `${import.meta.env.VITE_API_URL}/api/ai/skill-gap-advisor`,
+                {
+                    skill: formData.skill,
+                    experience: formData.experience
+                }
+            );
+
+            setSkillAdvice(response.data.advice);
+
+        } catch (error) {
+
+            alert("Failed to get advice");
+
+        } finally {
+
+            setLoadingAdvice(false);
+
+        }
     };
 
     const updateProfile = async () => {
@@ -383,12 +458,55 @@ const Profile = () => {
                                         className="w-full border p-2 rounded"
                                     />
 
+                                    <button
+                                        type="button"
+                                        onClick={handleSkillGapAdvice}
+                                        disabled={loadingAdvice}
+                                        className="bg-indigo-600 hover:bg-indigo-700 text-white w-full py-4 text-lg font-bold rounded-xl disabled:bg-gray-400"
+                                    >
+                                        {
+                                            loadingAdvice
+                                                ? "Getting Advice..."
+                                                : "🚀 Get AI Career Advice"
+                                        }
+                                    </button>
+
+
+                                    {
+                                        skillAdvice && (
+                                            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                                                <h3 className="font-bold text-lg text-blue-700 mb-2">
+                                                    AI Career Advice
+                                                </h3>
+
+                                                <pre className="whitespace-pre-wrap text-gray-700">
+                                                    {skillAdvice}
+                                                </pre>
+                                            </div>
+                                        )
+                                    }
+
+
                                     <p>
                                         <strong>Rating:</strong>{" "}
                                         ⭐ {profile.rating || 0}
                                         {" "}
                                         ({profile.totalRatings || 0} reviews)
                                     </p>
+
+
+                                    <button
+                                        type="button"
+                                        onClick={handleGenerateProfile}
+                                        disabled={loadingAI}
+                                        className="bg-purple-600 hover:bg-purple-700 text-white w-full py-4 text-lg font-bold rounded-xl mb-3 disabled:bg-gray-400"
+                                    >
+                                        {
+                                            loadingAI
+                                                ? "Generating Profile..."
+                                                : "✨ Generate Profile with AI"
+                                        }
+                                    </button>
 
                                     <textarea
                                         rows="4"
