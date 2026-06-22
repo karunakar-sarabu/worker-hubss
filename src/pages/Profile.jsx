@@ -169,7 +169,9 @@ const Profile = () => {
             const response = await axios.post(
                 `${import.meta.env.VITE_API_URL}/api/ai/generate-worker-profile`,
                 {
-                    skill: formData.skill,
+                    skill:
+                        formData.skills?.join(", ") ||
+                        formData.skill,
                     experience: formData.experience
                 }
             );
@@ -206,7 +208,9 @@ const Profile = () => {
             const response = await axios.post(
                 `${import.meta.env.VITE_API_URL}/api/ai/skill-gap-advisor`,
                 {
-                    skill: formData.skill,
+                    skill:
+                        formData.skills?.join(", ") ||
+                        formData.skill,
                     experience: formData.experience
                 }
             );
@@ -406,7 +410,7 @@ const Profile = () => {
                                     >
                                         Upload Photo
                                     </button>
-                                    <input
+                                    {/* <input
                                         type="text"
                                         placeholder="Skill"
                                         value={formData.skill || ""}
@@ -417,8 +421,68 @@ const Profile = () => {
                                             })
                                         }
                                         className="w-full border p-2 rounded"
-                                    />
+                                    /> */}
+                                    <div className="border rounded p-3">
 
+                                        <label className="font-semibold block mb-2">
+                                            Skills
+                                        </label>
+
+                                        {
+                                            [
+                                                "Construction",
+                                                "Agriculture",
+                                                "Electrician",
+                                                "Plumber",
+                                                "Painter",
+                                                "Carpenter",
+                                            ].map((skill) => (
+
+                                                <label
+                                                    key={skill}
+                                                    className="flex items-center gap-2 mb-2"
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={
+                                                            formData.skills?.includes(skill)
+                                                        }
+                                                        onChange={() => {
+
+                                                            if (
+                                                                formData.skills?.includes(skill)
+                                                            ) {
+
+                                                                setFormData({
+                                                                    ...formData,
+                                                                    skills:
+                                                                        formData.skills.filter(
+                                                                            (s) => s !== skill
+                                                                        ),
+                                                                });
+
+                                                            } else {
+
+                                                                setFormData({
+                                                                    ...formData,
+                                                                    skills: [
+                                                                        ...(formData.skills || []),
+                                                                        skill,
+                                                                    ],
+                                                                });
+
+                                                            }
+                                                        }}
+                                                    />
+
+                                                    {skill}
+
+                                                </label>
+
+                                            ))
+                                        }
+
+                                    </div>
                                     <input
                                         type="text"
                                         placeholder="Location"
@@ -629,7 +693,7 @@ const Profile = () => {
                                     </h3>
                                 </div>
 
-                                <div className="bg-gray-50 p-4 rounded-xl">
+                                {/* <div className="bg-gray-50 p-4 rounded-xl">
                                     <p className="text-gray-500 text-base font-medium">
                                         Skill
                                     </p>
@@ -637,8 +701,18 @@ const Profile = () => {
                                     <h3 className="text-2xl font-bold text-slate-800">
                                         {profile.skill}
                                     </h3>
-                                </div>
+                                </div> */}
+                                <p className="text-gray-500 text-base font-medium">
+                                    Skills
+                                </p>
 
+                                <h3 className="text-2xl font-bold text-slate-800">
+                                    {
+                                        profile.skills?.length > 0
+                                            ? profile.skills.join(", ")
+                                            : profile.skill
+                                    }
+                                </h3>
                                 <div className="bg-gray-50 p-4 rounded-xl">
                                     <p className="text-gray-500 text-base font-medium">
                                         Location

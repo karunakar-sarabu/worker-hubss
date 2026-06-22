@@ -9,6 +9,7 @@ const PostJob = () => {
 
     const [formData, setFormData] = useState({
         title: "",
+        skill: "",
         description: "",
         location: "",
         wage: "",
@@ -43,7 +44,7 @@ const PostJob = () => {
                 `${import.meta.env.VITE_API_URL}/api/ai/generate-job-description`,
                 {
                     title: formData.title,
-                    skill: formData.title,
+                    skill: formData.skill,
                     location: formData.location,
                     wage: formData.wage,
                 }
@@ -69,6 +70,7 @@ const PostJob = () => {
 
         if (
             !formData.title ||
+            !formData.skill ||
             !formData.description ||
             !formData.location ||
             !formData.wage
@@ -155,6 +157,48 @@ const PostJob = () => {
                                     onChange={handleChange}
                                     className="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 outline-none"
                                 />
+
+
+                                <div>
+                                    <label className="block font-semibold mb-2">
+                                        Skill Category
+                                    </label>
+
+                                    <select
+                                        name="skill"
+                                        value={formData.skill}
+                                        onChange={handleChange}
+                                        className="w-full border border-gray-300 rounded-xl p-3"
+                                    >
+                                        <option value="">
+                                            Select Skill
+                                        </option>
+
+                                        <option value="Construction">
+                                            Construction
+                                        </option>
+
+                                        <option value="Agriculture">
+                                            Agriculture
+                                        </option>
+
+                                        <option value="Electrician">
+                                            Electrician
+                                        </option>
+
+                                        <option value="Plumber">
+                                            Plumber
+                                        </option>
+
+                                        <option value="Painter">
+                                            Painter
+                                        </option>
+
+                                        <option value="Carpenter">
+                                            Carpenter
+                                        </option>
+                                    </select>
+                                </div>
                             </div>
 
                             <div>

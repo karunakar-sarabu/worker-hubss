@@ -10,7 +10,7 @@ const WorkerRegister = () => {
     const [formData, setFormData] = useState({
         name: "",
         phone: "",
-        skill: "",
+        skills: [],
         location: "",
         wage: "",
         password: ""
@@ -23,13 +23,35 @@ const WorkerRegister = () => {
         });
     };
 
+
+    const handleSkillChange = (skill) => {
+
+        if (formData.skills.includes(skill)) {
+
+            setFormData({
+                ...formData,
+                skills: formData.skills.filter(
+                    (s) => s !== skill
+                ),
+            });
+
+        } else {
+
+            setFormData({
+                ...formData,
+                skills: [...formData.skills, skill],
+            });
+
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (
             !formData.name ||
             !formData.phone ||
-            !formData.skill ||
+            formData.skills.length === 0 ||
             !formData.location ||
             !formData.wage ||
             !formData.password
@@ -43,11 +65,17 @@ const WorkerRegister = () => {
         }
         try {
             setLoading(true);
-
-            await axios.post(
+            console.log(formData);
+            // await axios.post(
+            //     `${import.meta.env.VITE_API_URL}/api/workers/register`,
+            //     formData
+            // );
+            const response = await axios.post(
                 `${import.meta.env.VITE_API_URL}/api/workers/register`,
                 formData
             );
+
+            console.log(response.data);
 
             setRegistrationSuccess(true);
 
@@ -191,41 +219,38 @@ const WorkerRegister = () => {
                                 className="w-full border border-gray-300 rounded-xl p-3"
                             />
 
-                            <select
-                                name="skill"
-                                value={formData.skill}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-xl p-3"
-                            >
-                                <option value="">
-                                    Select Skill
-                                </option>
+                            <div className="space-y-2">
 
-                                <option value="Construction">
-                                    Construction
-                                </option>
+                                <label className="font-semibold">
+                                    Select Skills
+                                </label>
 
-                                <option value="Agriculture">
-                                    Agriculture
-                                </option>
+                                {[
+                                    "Construction",
+                                    "Agriculture",
+                                    "Electrician",
+                                    "Plumber",
+                                    "Painter",
+                                    "Carpenter",
+                                ].map((skill) => (
 
-                                <option value="Electrician">
-                                    Electrician
-                                </option>
+                                    <label
+                                        key={skill}
+                                        className="flex items-center gap-2"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            checked={formData.skills.includes(skill)}
+                                            onChange={() =>
+                                                handleSkillChange(skill)
+                                            }
+                                        />
 
-                                <option value="Plumber">
-                                    Plumber
-                                </option>
+                                        {skill}
+                                    </label>
 
-                                <option value="Painter">
-                                    Painter
-                                </option>
-
-                                <option value="Carpenter">
-                                    Carpenter
-                                </option>
-                            </select>
-
+                                ))}
+                            </div>
                             <input
                                 type="text"
                                 name="location"
