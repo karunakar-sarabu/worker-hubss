@@ -6,6 +6,8 @@ const AvailableJobs = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [locationFilter, setLocationFilter] = useState("");
     const [minWage, setMinWage] = useState("");
+    const [workerSkills, setWorkerSkills] = useState([]);
+
     useEffect(() => {
         fetchJobs();
     }, []);
@@ -17,6 +19,15 @@ const AvailableJobs = () => {
             );
 
             setJobs(response.data);
+            const phone = localStorage.getItem("userPhone");
+
+            const workerResponse = await axios.get(
+                `${import.meta.env.VITE_API_URL}/api/profile/worker/${phone}`
+            );
+
+            setWorkerSkills(
+                workerResponse.data.skills || []
+            );
         } catch (error) {
             console.log(error);
         }
@@ -132,57 +143,82 @@ const AvailableJobs = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredJobs.map((job) => (
-                    <div
-                        key={job._id}
-                        className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
-                        <h2 className="text-2xl font-bold text-slate-800">
-                            {job.title}
-                        </h2>
+                {filteredJobs.map((job) => {
+                    const isEligible =
+                        workerSkills.includes(job.skill);
+                    return (
+                        <div
+                            key={job._id}
+                            className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+                            <h2 className="text-2xl font-bold text-slate-800">
+                                {job.title}
+                            </h2>
 
-                        <p className="mt-2 text-gray-600">
-                            {job.description}
-                        </p>
+                            <p className="mt-2 text-gray-600">
+                                {job.description}
+                            </p>
 
-                        <p className="mt-3 text-gray-700">
-                            📍 {job.location}
-                        </p>
+                            <p className="mt-3 text-gray-700">
+                                📍 {job.location}
+                            </p>
+                            <p className="mt-2 text-blue-600 font-semibold">
+                                Skill: {job.skill}
+                            </p>
+                            <p className="mt-3 font-medium text-yellow-600">
+                                ⭐ {job.employerRating?.toFixed(1) || 0}
+                                {" "}
+                                ({job.employerTotalRatings || 0} reviews)
+                            </p>
 
-                        <p className="mt-3 font-medium text-yellow-600">
-                            ⭐ {job.employerRating?.toFixed(1) || 0}
-                            {" "}
-                            ({job.employerTotalRatings || 0} reviews)
-                        </p>
-
-                        {job.employerRating >= 4.5 && (
-                            <span className="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold ">
-                                ✅ Trusted Employer
-                            </span>
-                        )}
+                            {job.employerRating >= 4.5 && (
+                                <span className="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold ">
+                                    ✅ Trusted Employer
+                                </span>
+                            )}
 
 
-                        <p className="text-2xl font-bold text-green-600">
-                            ₹{job.wage}/day
-                        </p>
+                            <p className="text-2xl font-bold text-green-600">
+                                ₹{job.wage}/day
+                            </p>
 
-                        <div className="flex gap-2 mt-4">
-                            <button
-                                onClick={() => handleApply(job._id)}
-                                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-semibold ">
-                                Apply
-                            </button>
+                            <div className="flex flex-col md:flex-row gap-2 mt-4">
+                                {/* <button
+                                    onClick={() => handleApply(job._id)}
+                                    className="flex-1 bg-blue-600 ..."
+                                >
+                                    Apply
+                                </button> */}
+                                {isEligible ? (
 
-                            <a
-                                href={`https://wa.me/91${job.employerPhone}?text=Hello, I am interested in the job: ${job.title}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl font-semibold text-center ">
-                                WhatsApp
-                            </a>
+                                    <button
+                                        onClick={() => handleApply(job._id)}
+                                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-semibold"
+                                    >
+                                        Apply Now
+                                    </button>
+
+                                ) : (
+
+                                    <button
+                                        disabled
+                                        className="flex-1 bg-gray-400 text-white px-4 py-2 rounded-xl font-semibold cursor-not-allowed"
+                                    >
+                                        Not Eligible
+                                    </button>
+
+                                )}
+
+                                <a
+                                    href={`https://wa.me/91${job.employerPhone}?text=Hello, I am interested in the job: ${job.title}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl font-semibold text-center ">
+                                    WhatsApp
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                ))}
-
+                    );
+                })}
             </div>
 
             {filteredJobs.length === 0 && (
