@@ -148,19 +148,7 @@ const WorkerDashboard = () => {
                             {stats.rating}
                         </h2>
                     </div>
-                    <div
-                        onClick={() => navigate("/career-assistant")}
-                        className="bg-gradient-to-r from-indigo-600 to-purple-700 text-white rounded-2xl p-6 shadow-lg cursor-pointer hover:scale-105 transition"
-                    >
-                        <h2 className="text-2xl font-bold">
-                            🤖 AI Career Assistant
-                        </h2>
 
-                        <p className="mt-2">
-                            Get career advice, skill suggestions,
-                            and tips to earn more money.
-                        </p>
-                    </div>
                 </div>
 
                 {/* Secondary Statistics */}
@@ -293,6 +281,26 @@ const WorkerDashboard = () => {
 
                     </div>
 
+
+
+
+                    <div
+                        onClick={() => navigate("/career-assistant")}
+                        className="bg-gradient-to-r from-indigo-600 to-purple-700 text-white rounded-2xl p-6 shadow-md hover:-translate-y-2 hover:shadow-xl transition-all duration-300 cursor-pointer"
+                    >
+                        <h3 className="text-2xl font-bold mb-3">
+                            🤖 AI Career Assistant
+                        </h3>
+
+                        <p className="mb-5">
+                            Get career advice, skill suggestions,
+                            and tips to earn more money.
+                        </p>
+
+                        <button className="w-full bg-white text-indigo-700 font-bold py-3 rounded-xl">
+                            Open Assistant
+                        </button>
+                    </div>
                     <div className="bg-white p-6 rounded-2xl shadow-md hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
 
                         <h3 className="text-2xl font-bold text-red-600 mb-3">
