@@ -148,7 +148,19 @@ const WorkerDashboard = () => {
                             {stats.rating}
                         </h2>
                     </div>
+                    <div
+                        onClick={() => navigate("/career-assistant")}
+                        className="bg-gradient-to-r from-indigo-600 to-purple-700 text-white rounded-2xl p-6 shadow-lg cursor-pointer hover:scale-105 transition"
+                    >
+                        <h2 className="text-2xl font-bold">
+                            🤖 AI Career Assistant
+                        </h2>
 
+                        <p className="mt-2">
+                            Get career advice, skill suggestions,
+                            and tips to earn more money.
+                        </p>
+                    </div>
                 </div>
 
                 {/* Secondary Statistics */}

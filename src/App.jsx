@@ -18,9 +18,11 @@ import Navbar from "./components/Navbar";
 import BrowseWorkers from "./pages/BrowseWorkers";
 import WorkerDetails from "./pages/WorkerDetails";
 import ForgotPassword from "./pages/ForgotPassword";
+import CareerAssistant from "./pages/CareerAssistant";
 function App() {
   return (
     <>
+      
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -28,6 +30,10 @@ function App() {
         <Route path="/employer-register" element={<EmployerRegister />} />
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<NotFound />} />
+        <Route
+          path="/career-assistant"
+          element={<CareerAssistant />}
+        />
         <Route
           path="/forgot-password"
           element={<ForgotPassword />}
