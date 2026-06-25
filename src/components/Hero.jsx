@@ -52,12 +52,21 @@ const Hero = () => {
         <p className="text-green-400 font-semibold mb-4">
           Daily Wage Connect
         </p>
-      <h2 className="text-white text-2xl">🚀 Daily Wage Connect is currently in Beta. We are actively improving features and fixing issues to provide a better experience for workers and employers. Thank you for your support and feedback.</h2>
+        <h2 className="text-white text-2xl">🚀 Daily Wage Connect is currently in Beta. We are actively improving features and fixing issues to provide a better experience for workers and employers. Thank you for your support and feedback.</h2>
         <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight">
           Find Daily Jobs.
           <br />
           Hire Skilled Workers.
         </h1>
+
+        <a
+          href="https://chat.whatsapp.com/BcMBk61lLmV9UO7EunbssR"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition"
+        >
+          💬 Join Official WhatsApp Group
+        </a>
 
         <p className="mt-6 text-lg md:text-xl text-gray-200">
           Connecting workers and employers across India.
